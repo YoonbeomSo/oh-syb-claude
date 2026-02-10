@@ -61,8 +61,3 @@ Claude Code에서 `/` 명령어로 실행:
 ### Agents
 Claude Code가 자동으로 적절한 상황에서 agent를 사용하거나, 직접 호출할 수 있습니다.
 
----
-
-## 라이선스
-
-MIT License
