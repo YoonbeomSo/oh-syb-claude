@@ -27,6 +27,8 @@ curl -o ~/.claude/agents/<filename>.md <raw-url>
 
 ## Commands
 
+> 출처: [LOOPERS](https://www.loopers.im/)
+
 | 파일 | 설명 | 다운로드 |
 |------|------|----------|
 | [requirements-analysis.md](./commands/requirements-analysis.md) | 요구사항 분석 도구. 애매한 요구사항을 질문/답변을 통해 명확히 하고, Mermaid 다이어그램(시퀀스, 클래스, ERD)으로 정리합니다. | [Raw](https://raw.githubusercontent.com/YoonbeomSo/oh-syb-claude/main/commands/requirements-analysis.md) |
@@ -35,6 +37,8 @@ curl -o ~/.claude/agents/<filename>.md <raw-url>
 ---
 
 ## Agents
+
+> 출처: [Playwright Test Agents](https://playwright.dev/docs/test-agents)
 
 | 파일 | 설명 | 다운로드 |
 |------|------|----------|
