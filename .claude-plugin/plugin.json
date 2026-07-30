@@ -1,7 +1,7 @@
 {
   "name": "oh-my-beom",
   "description": "Korean developer toolkit for Claude Code: team-based orchestration, TDD-driven implementation, Playwright E2E web testing with OTP bypass, plan-based tracking, and coding guidelines",
-  "version": "2.25.0",
+  "version": "2.25.1",
   "author": {
     "name": "YoonbeomSo"
   },
