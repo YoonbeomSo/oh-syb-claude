@@ -78,15 +78,20 @@ if [ -z "$CMD" ]; then
   exit 0
 fi
 
+# 명령이 대상 repo를 지정했으면(git -C / cd) 훅의 cwd가 아니라 그 repo의 브랜치를 본다.
+# cwd만 보면 다른 repo에 커밋할 때도 cwd 브랜치로 오판한다.
 get_branch() {
-  local branch
-  branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+  local branch target
+  target=$(echo "$CMD" | sed -n 's/.*git[[:space:]]\{1,\}-C[[:space:]]\{1,\}\([^[:space:]"]\{1,\}\).*/\1/p' 2>/dev/null || echo "")
+  if [ -z "$target" ]; then
+    target=$(echo "$FULL_CMD" | grep -oE '(^|[;&|][[:space:]]*)cd[[:space:]]+[^;&|)]+' | head -1 \
+      | sed -E 's/.*cd[[:space:]]+//; s/["'"'"']//g' | awk '{print $1}' 2>/dev/null || echo "")
+  fi
+  if [ -n "$target" ] && [ -d "$target" ]; then
+    branch=$(git -C "$target" symbolic-ref --short HEAD 2>/dev/null || echo "")
+  fi
   if [ -z "$branch" ]; then
-    local git_dir
-    git_dir=$(echo "$CMD" | sed -n 's/.*git[[:space:]]\{1,\}-C[[:space:]]\{1,\}\([^[:space:]"]\{1,\}\).*/\1/p' 2>/dev/null || echo "")
-    if [ -n "$git_dir" ] && [ -d "$git_dir" ]; then
-      branch=$(git -C "$git_dir" symbolic-ref --short HEAD 2>/dev/null || echo "")
-    fi
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
   fi
   echo "$branch"
 }
