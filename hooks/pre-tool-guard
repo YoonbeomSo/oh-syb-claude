@@ -96,6 +96,28 @@ get_branch() {
   echo "$branch"
 }
 
+# 대상 repo 경로 해석 (git -C 우선, 없으면 cd 대상, 둘 다 없으면 cwd)
+resolve_repo_dir() {
+  local target
+  target=$(echo "$CMD" | sed -n 's/.*git[[:space:]]\{1,\}-C[[:space:]]\{1,\}\([^[:space:]"]\{1,\}\).*/\1/p' 2>/dev/null || echo "")
+  if [ -z "$target" ]; then
+    target=$(echo "$FULL_CMD" | grep -oE '(^|[;&|][[:space:]]*)cd[[:space:]]+[^;&|)]+' | head -1 \
+      | sed -E 's/.*cd[[:space:]]+//; s/["'"'"']//g' | awk '{print $1}' 2>/dev/null || echo "")
+  fi
+  if [ -n "$target" ] && [ -d "$target" ]; then
+    echo "$target"
+  else
+    echo "."
+  fi
+}
+
+# hh-command-center는 보호 브랜치 검사 면제 — 지식 저장소라 master 직접 커밋·push가 규칙이며
+# 자체 branch-guard.sh를 따로 둔다. 분리 전략(feat 브랜치 → MR)은 MSA 코드 repo 대상이다.
+if git -C "$(resolve_repo_dir)" remote get-url origin 2>/dev/null | grep -q 'hh-command-center'; then
+  echo '{"continue": true}'
+  exit 0
+fi
+
 PROTECTED_RE="^(develop|main|master|test|dev)$"
 
 # CMD는 줄바꿈으로 구분된 여러 git 명령일 수 있음 (체인 명령)
